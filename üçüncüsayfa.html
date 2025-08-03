@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Smiley's Pizza - Türkiye'nin En Lezzetli Pizzaları</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --primary: #e63946;
+      --primary-dark: #c1121f;
+      --secondary: #f8f9fa;
+      --accent: #ffd166;
+      --dark: #212529;
+      --light: #f8f9fa;
+    }
+    
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background-color: #fff9f2;
+      color: var(--dark);
+      overflow-x: hidden;
+    }
+    
+    .title-font {
+      font-family: 'Playfair Display', serif;
+    }
+    
+    header {
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      color: white;
+      padding: 1.5rem 2rem;
+      text-align: center;
+      position: relative;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    
+    header h1 {
+      font-size: 2.2rem;
+      margin: 0;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+    }
+    
+    .branch-info {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 0.5rem;
+      font-size: 1rem;
+      background: rgba(255,255,255,0.15);
+      padding: 0.5rem 1rem;
+      border-radius: 50px;
+      display: inline-flex;
+    }
+    
+    .branch-info i {
+      margin-right: 0.5rem;
+    }
+    
+    .slider-container {
+      position: relative;
+      width: 100%;
+      height: 60vh;
+      min-height: 400px;
+      overflow: hidden;
+      margin: 0 auto;
+    }
+    
+    .slider {
+      width: 100%;
+      height: 100%;
+      position: relative;
+    }
+    
+    .slide {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      opacity: 0;
+      transition: opacity 1s ease-in-out;
+      background-size: cover;
+      background-position: center;
+    }
+    
+    .slide.active {
+      opacity: 1;
+    }
+    
+    .slide-content {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+      color: white;
+      padding: 2rem;
+      text-align: center;
+    }
+    
+    .slide-content h2 {
+      font-size: 2rem;
+      margin-bottom: 0.5rem;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+    }
+    
+    .slide-content p {
+      font-size: 1.2rem;
+      margin-bottom: 1rem;
+      text-shadow: 0 1px 3px rgba(0,0,0,0.5);
+    }
+    
+    .order-btn {
+      display: inline-block;
+      background-color: var(--accent);
+      color: var(--dark);
+      padding: 0.8rem 2rem;
+      border-radius: 50px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    }
+    
+    .order-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+      background-color: #ffc233;
+    }
+    
+    .slider-nav {
+      position: absolute;
+      bottom: 1rem;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      z-index: 10;
+    }
+    
+    .slider-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background-color: rgba(255,255,255,0.5);
+      margin: 0 5px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    
+    .slider-dot.active {
+      background-color: white;
+    }
+    
+    .section-title {
+      text-align: center;
+      margin: 3rem 0;
+    }
+    
+    .section-title h2 {
+      font-size: 2.5rem;
+      color: var(--primary);
+      margin-bottom: 0.5rem;
+      position: relative;
+      display: inline-block;
+    }
+    
+    .section-title h2::after {
+      content: '';
+      position: absolute;
+      bottom: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 80px;
+      height: 3px;
+      background: linear-gradient(to right, var(--primary), var(--accent));
+    }
+    
+    .section-title p {
+      color: #666;
+      font-size: 1.1rem;
+      max-width: 700px;
+      margin: 0 auto;
+    }
+    
+    .campaigns {
+      padding: 2rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+      margin-top: 2rem;
+    }
+    
+    .card {
+      background-color: white;
+      border-radius: 15px;
+      overflow: hidden;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+      transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+      position: relative;
+    }
+    
+    .card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 12px 25px rgba(0,0,0,0.15);
+    }
+    
+    .card-badge {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      background-color: var(--primary);
+      color: white;
+      padding: 0.3rem 1rem;
+      border-radius: 50px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      z-index: 2;
+    }
+    
+    .card-img {
+      width: 100%;
+      height: 220px;
+      object-fit: cover;
+    }
+    
+    .card-content {
+      padding: 1.5rem;
+    }
+    
+    .card-content h3 {
+      margin: 0 0 0.5rem 0;
+      font-size: 1.4rem;
+      color: var(--dark);
+    }
+    
+    .card-content p {
+      color: #666;
+      margin-bottom: 1.5rem;
+      font-size: 0.95rem;
+    }
+    
+    .card-price {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    
+    .price {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--primary);
+    }
+    
+    .old-price {
+      text-decoration: line-through;
+      color: #999;
+      font-size: 1rem;
+      margin-right: 0.5rem;
+    }
+    
+    .add-to-cart {
+      background-color: var(--primary);
+      color: white;
+      border: none;
+      padding: 0.6rem 1.2rem;
+      border-radius: 50px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+    }
+    
+    .add-to-cart i {
+      margin-right: 0.5rem;
+    }
+    
+    .add-to-cart:hover {
+      background-color: var(--primary-dark);
+      transform: translateY(-2px);
+    }
+    
+    .floating-btn {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      width: 60px;
+      height: 60px;
+      background-color: var(--primary);
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      box-shadow: 0 6px 15px rgba(230, 57, 70, 0.5);
+      z-index: 100;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    
+    .floating-btn:hover {
+      transform: scale(1.1);
+      background-color: var(--primary-dark);
+    }
+    
+    @media (max-width: 768px) {
+      header h1 {
+        font-size: 1.8rem;
+      }
+      
+      .slider-container {
+        height: 50vh;
+        min-height: 300px;
+      }
+      
+      .slide-content h2 {
+        font-size: 1.5rem;
+      }
+      
+      .slide-content p {
+        font-size: 1rem;
+      }
+      
+      .section-title h2 {
+        font-size: 2rem;
+      }
+      
+      .cards {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1 class="title-font">Smiley's Pizza</h1>
+    <div class="branch-info">
+      <i class="fas fa-store"></i>
+      <span id="branchName">Şube Seçilmedi</span>
+    </div>
+    <div style="text-align:center; margin:2rem 0;">
+  <span style="font-weight:bold; color:#e63946;">Seçilen Şube: </span>
+  <span id="branchName">Şube Seçilmedi</span>
+</div>
+<div style="text-align:center; margin-bottom:2rem;">
+  <a href="ilksayfa.html" class="service-button" style="margin-right:1rem;">Ana Sayfa</a>
+  <a href="ikincisayfa.html" class="service-button">Sipariş Yöntemi Değiştir</a>
+</div>
+<!-- ...mevcut menü ve sepet kodların devamı... -->
+  </header>
+
+  <div class="slider-container">
+    <div class="slider">
+      <div class="slide active" style="background-image: url('https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1682&q=80');">
+        <div class="slide-content">
+          <h2>Özel Napoli Usulü Pizzalar</h2>
+          <p>İtalya'dan ödüllü şeflerimizle hazırlanan otantik lezzetler</p>
+          <a href="#" class="order-btn">Şimdi Sipariş Ver</a>
+        </div>
+      </div>
+      <div class="slide" style="background-image: url('https://images.unsplash.com/photo-1513104890138-7c749659a591?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80');">
+        <div class="slide-content">
+          <h2>2 Büyük Boy Pizza + İçecek</h2>
+          <p>Sadece 199 TL! Bu fırsatı kaçırmayın</p>
+          <a href="#" class="order-btn">Kampanyayı Gör</a>
+        </div>
+      </div>
+      <div class="slide" style="background-image: url('https://images.unsplash.com/photo-1604382354936-07c5d9983bd3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80');">
+        <div class="slide-content">
+          <h2>Aile Menüsü 249 TL!</h2>
+          <p>4 kişilik menü + 1L kola ile mükemmel bir akşam</p>
+          <a href="#" class="order-btn">Hemen Al</a>
+        </div>
+      </div>
+    </div>
+    <div class="slider-nav">
+      <div class="slider-dot active"></div>
+      <div class="slider-dot"></div>
+      <div class="slider-dot"></div>
+    </div>
+  </div>
+
+  <div class="campaigns">
+    <div class="section-title">
+      <h2>Günün Kampanyaları</h2>
+      <p>Smiley's Pizza'nın özel lezzetlerini avantajlı fiyatlarla deneyin</p>
+    </div>
+    
+    <div class="cards">
+      <div class="card">
+        <div class="card-badge">-25%</div>
+        <img src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1682&q=80" alt="Büyük Pizza Kampanyası" class="card-img">
+        <div class="card-content">
+          <h3>2 Büyük Boy Pizza + İçecek</h3>
+          <p>Margherita, Pepperoni veya Karışık seçenekleriyle. 2 büyük boy pizza ve 1.5L kola</p>
+          <div class="card-price">
+            <div>
+              <span class="old-price">269 TL</span>
+              <span class="price">199 TL</span>
+            </div>
+            <button class="add-to-cart">
+              <i class="fas fa-shopping-cart"></i> Sepete Ekle
+            </button>
+          </div>
+        </div>
+      </div>
+      
+      <div class="card">
+        <div class="card-badge">Popüler</div>
+        <img src="https://images.unsplash.com/photo-1513104890138-7c749659a591?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" alt="Aile Menüsü" class="card-img">
+        <div class="card-content">
+          <h3>Aile Menüsü</h3>
+          <p>2 büyük boy pizza, 1 orta boy pizza, 8 parça kanat ve 1L kola. 4 kişilik mükemmel menü!</p>
+          <div class="card-price">
+            <div>
+              <span class="old-price">329 TL</span>
+              <span class="price">249 TL</span>
+            </div>
+            <button class="add-to-cart">
+              <i class="fas fa-shopping-cart"></i> Sepete Ekle
+            </button>
+          </div>
+        </div>
+      </div>
+      
+      <div class="card">
+        <div class="card-badge">Yeni</div>
+        <img src="https://images.unsplash.com/photo-1604382354936-07c5d9983bd3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" alt="Öğlen Menüsü" class="card-img">
+        <div class="card-content">
+          <h3>Öğlen Menüsü</h3>
+          <p>1 orta boy pizza, salata ve içecek. Öğlen molaları için mükemmel seçim!</p>
+          <div class="card-price">
+            <div>
+              <span class="old-price">129 TL</span>
+              <span class="price">99 TL</span>
+            </div>
+            <button class="add-to-cart">
+              <i class="fas fa-shopping-cart"></i> Sepete Ekle
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="floating-btn" id="cartBtn">
+    <i class="fas fa-shopping-cart"></i>
+  </div>
+  <!-- Sepet Modalı -->
+<div id="cartModal" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.4); z-index:999; align-items:center; justify-content:center;">
+  <div style="background:white; border-radius:16px; max-width:400px; width:90%; margin:auto; padding:2rem; position:relative;">
+    <button onclick="closeCartModal()" style="position:absolute; top:12px; right:16px; background:none; border:none; font-size:1.5rem; color:#e63946; cursor:pointer;">&times;</button>
+    <h2 style="margin-top:0; color:#e63946;">Sepetiniz</h2>
+    <ul id="cartItems" style="list-style:none; padding:0; margin:1rem 0;"></ul>
+    <div id="cartEmpty" style="color:#666; text-align:center;">Sepetiniz boş.</div>
+    <button onclick="closeCartModal()" style="background:#e63946; color:white; border:none; border-radius:8px; padding:0.7rem 1.5rem; font-weight:600; margin-top:1rem; cursor:pointer;">Kapat</button>
+  </div>
+</div>
+
+  <script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const branch = localStorage.getItem('selectedBranch');
+    if (branch) {
+      document.getElementById("branchName").textContent = branch;
+    }
+
+    // Slider functionality
+    const slides = document.querySelectorAll('.slide');
+    const dots = document.querySelectorAll('.slider-dot');
+    let currentSlide = 0;
+
+    function showSlide(n) {
+      slides.forEach(slide => slide.classList.remove('active'));
+      dots.forEach(dot => dot.classList.remove('active'));
+      currentSlide = (n + slides.length) % slides.length;
+      slides[currentSlide].classList.add('active');
+      dots[currentSlide].classList.add('active');
+    }
+    function nextSlide() { showSlide(currentSlide + 1); }
+    setInterval(nextSlide, 5000);
+    dots.forEach((dot, index) => {
+      dot.addEventListener('click', () => { showSlide(index); });
+    });
+
+    // Sepet işlemleri
+    document.getElementById('cartBtn').addEventListener('click', function() {
+      openCartModal();
+    });
+
+    document.querySelectorAll('.add-to-cart').forEach(button => {
+      button.addEventListener('click', function() {
+        const productName = this.closest('.card-content').querySelector('h3').textContent;
+        addToCart(productName);
+        showNotification(`${productName} sepete eklendi!`);
+      });
+    });
+
+    renderCart();
+  });
+
+  // Sepete ürün ekle
+  function addToCart(productName) {
+    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+    cart.push(productName);
+    localStorage.setItem('cart', JSON.stringify(cart));
+    renderCart();
+  }
+
+  // Sepeti modalda göster
+  function openCartModal() {
+    document.getElementById('cartModal').style.display = 'flex';
+    renderCart();
+  }
+
+  // Sepet modalını kapat
+  function closeCartModal() {
+    document.getElementById('cartModal').style.display = 'none';
+  }
+
+  // Sepet içeriğini güncelle
+  function renderCart() {
+    const cart = JSON.parse(localStorage.getItem('cart')) || [];
+    const cartItems = document.getElementById('cartItems');
+    const cartEmpty = document.getElementById('cartEmpty');
+    if (cart.length === 0) {
+      cartItems.innerHTML = '';
+      cartEmpty.style.display = 'block';
+    } else {
+      cartItems.innerHTML = cart.map(item => `<li style="padding:0.5rem 0; border-bottom:1px solid #eee;">${item}</li>`).join('');
+      cartEmpty.style.display = 'none';
+    }
+  }
+
+  // Animasyonlu bildirim
+  function showNotification(message) {
+    const notification = document.createElement('div');
+    notification.className = 'fixed top-4 right-4 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg z-50';
+    notification.style.opacity = '0';
+    notification.style.transition = 'opacity 0.4s';
+    notification.textContent = message;
+    document.body.appendChild(notification);
+    setTimeout(() => { notification.style.opacity = '1'; }, 50);
+    setTimeout(() => {
+      notification.style.opacity = '0';
+      setTimeout(() => { notification.remove(); }, 400);
+    }, 2500);
+  }
+</script>
+</body>
+</html>

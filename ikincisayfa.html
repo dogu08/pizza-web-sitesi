@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <title>Pizza Lezzeti - Sipariş Yöntemi Seçimi</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Türkiye'nin en lezzetli pizzalarını dilediğiniz şekilde sipariş edin! Paket servis veya şubeden teslim seçenekleri.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+  <!-- SweetAlert2 CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <style>
+    :root {
+      --primary: #ff6b6b;
+      --secondary: #ffa502;
+      --dark: #2f3542;
+      --light: #f1f2f6;
+      --success: #2ed573;
+    }
+    
+    *, *::before, *::after { box-sizing: border-box; }
+    body, html { margin:0; padding:0; height:100%; overflow-x:hidden; font-family:'Poppins', sans-serif; }
+    
+    body {
+      background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), 
+                  url('https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1682&q=80') no-repeat center center fixed;
+      background-size: cover;
+      position: relative;
+      animation: fadeIn 1.2s ease-out;
+      color: var(--light);
+    }
+    
+    .container {
+      position: relative; 
+      z-index:1; 
+      text-align:center; 
+      padding:5vh 20px; 
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    
+    .logo {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      font-family: 'Playfair Display', serif;
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--primary);
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+    }
+    
+    h1 { 
+      font-size:2.8rem; 
+      background:rgba(47, 53, 66,0.85); 
+      display:inline-block;
+      padding:25px 50px; 
+      border-radius:15px; 
+      box-shadow:0 10px 30px rgba(0,0,0,0.5);
+      animation: slideDown 0.8s ease-out;
+      font-family: 'Playfair Display', serif;
+      margin-bottom: 0.5em;
+      border: 2px solid var(--primary);
+    }
+    
+    .tagline {
+      font-size: 1.2rem;
+      margin-bottom: 2rem;
+      background: rgba(47, 53, 66, 0.7);
+      padding: 10px 20px;
+      border-radius: 50px;
+      display: inline-block;
+      font-weight: 300;
+    }
+    
+    .service-container { 
+      margin:3rem auto; 
+      display:flex; 
+      justify-content:center; 
+      gap:30px; 
+      flex-wrap:wrap;
+      max-width: 800px;
+    }
+    
+    .service-button {
+      padding:20px 45px; 
+      font-size:1.3rem; 
+      border:none; 
+      border-radius:12px;
+      background:linear-gradient(135deg, var(--primary), var(--secondary)); 
+      color:#fff; 
+      cursor:pointer;
+      box-shadow:0 8px 20px rgba(0,0,0,0.3); 
+      transition:all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 280px;
+      justify-content: center;
+    }
+    
+    .service-button:hover { 
+      transform:translateY(-5px) scale(1.03); 
+      box-shadow:0 12px 25px rgba(0,0,0,0.4);
+    }
+    
+    .service-button .icon {
+      font-size: 1.6rem;
+    }
+    
+    .apps { 
+      display:none; 
+      margin:3rem auto 0; 
+      background:rgba(255,255,255,0.97); 
+      color:var(--dark);
+      padding:2.5rem; 
+      border-radius:20px; 
+      max-width:800px; 
+      box-shadow:0 15px 35px rgba(0,0,0,0.3); 
+      animation:fadeInUp 0.8s ease-in;
+      border: 1px solid rgba(0,0,0,0.1);
+    }
+    
+    .apps h2 { 
+      margin-bottom:1.5rem; 
+      color: var(--dark);
+      font-size: 1.8rem;
+      position: relative;
+      padding-bottom: 15px;
+    }
+    
+    .apps h2::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 80px;
+      height: 3px;
+      background: linear-gradient(to right, var(--primary), var(--secondary));
+    }
+    
+    .app-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 25px;
+      margin-top: 2rem;
+    }
+    
+    .app-card {
+      background: white;
+      border-radius: 12px;
+      padding: 20px;
+      transition: all 0.3s ease;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+      border: 1px solid rgba(0,0,0,0.05);
+    }
+    
+    .app-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+    }
+    
+    .app-card img { 
+      width:100%; 
+      height: auto;
+      border-radius:8px; 
+      box-shadow:0 4px 10px rgba(0,0,0,0.1); 
+      margin-bottom: 15px;
+    }
+    
+    .app-card h3 {
+      margin: 0;
+      font-size: 1.1rem;
+      color: var(--dark);
+    }
+    
+    .pickup-form { 
+      display:none; 
+      background:rgba(255,255,255,0.97); 
+      color:var(--dark);
+      padding:2.5rem; 
+      max-width:600px; 
+      margin:3rem auto; 
+      border-radius:20px;
+      box-shadow:0 15px 35px rgba(0,0,0,0.3); 
+      animation:fadeInUp 0.8s ease-in;
+      border: 1px solid rgba(0,0,0,0.1);
+    }
+    
+    .pickup-form h2 {
+      margin-bottom: 1.5rem;
+      color: var(--dark);
+      font-size: 1.8rem;
+      position: relative;
+      padding-bottom: 15px;
+    }
+    
+    .pickup-form h2::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 80px;
+      height: 3px;
+      background: linear-gradient(to right, var(--primary), var(--secondary));
+    }
+    
+    .pickup-form form { 
+      display:flex; 
+      flex-direction:column; 
+      gap:20px; 
+    }
+    
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      text-align: left;
+    }
+    
+    .pickup-form label {
+      font-weight: 600;
+      color: var(--dark);
+    }
+    
+    .pickup-form select, 
+    .pickup-form input {
+      padding:12px 15px; 
+      font-size:1rem; 
+      border-radius:8px; 
+      border:1px solid #ddd;
+      transition: all 0.3s;
+      background: white;
+    }
+    
+    .pickup-form select:focus, 
+    .pickup-form input:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(255, 107, 107, 0.2);
+    }
+    
+    .pickup-form button {
+      padding:15px; 
+      font-size:1.1rem; 
+      border-radius:8px; 
+      border:none;
+      background:linear-gradient(135deg, var(--primary), var(--secondary));
+      color:#fff; 
+      transition:all 0.3s;
+      font-weight: 600;
+      margin-top: 10px;
+      cursor: pointer;
+    }
+    
+    .pickup-form button:hover { 
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(255, 107, 107, 0.4);
+    }
+    
+    .popup { 
+      display:none; 
+      position:fixed; 
+      z-index:100; 
+      top:0; 
+      left:0; 
+      right:0; 
+      bottom:0;
+      background:rgba(0,0,0,0.7); 
+      backdrop-filter: blur(5px);
+      animation: fadeIn 0.3s ease-out;
+    }
+    
+    .popup-content {
+      background:#fff; 
+      padding:2.5rem; 
+      border-radius:20px; 
+      max-width:450px;
+      margin:10vh auto; 
+      text-align:center; 
+      position:relative; 
+      animation:scaleUp 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+      border: 2px solid var(--primary);
+    }
+    
+    .popup h2 { 
+      color: var(--primary);
+      margin-bottom: 1rem;
+      font-size: 1.8rem;
+    }
+    
+    .popup p {
+      font-size: 1.1rem;
+      line-height: 1.6;
+      margin-bottom: 1.5rem;
+    }
+    
+    .popup-image {
+      width: 100%;
+      border-radius: 12px;
+      margin: 1rem 0;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+    
+    .popup .close { 
+      position:absolute; 
+      right:25px; 
+      top:20px; 
+      font-size:2rem; 
+      cursor:pointer; 
+      color: #aaa;
+      transition: all 0.3s;
+    }
+    
+    .popup .close:hover {
+      color: var(--primary);
+      transform: rotate(90deg);
+    }
+    
+    .coupon-code {
+      background: #f8f9fa;
+      padding: 10px;
+      border-radius: 8px;
+      font-family: monospace;
+      font-size: 1.3rem;
+      color: var(--primary);
+      font-weight: bold;
+      margin: 1rem 0;
+      display: inline-block;
+      border: 2px dashed var(--primary);
+    }
+    
+    .benefits {
+      text-align: left;
+      margin: 1.5rem 0;
+    }
+    
+    .benefit-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+    
+    .benefit-icon {
+      color: var(--success);
+      font-size: 1.2rem;
+    }
+    
+    /* Animations */
+    @keyframes fadeIn { 
+      from {opacity:0;} 
+      to {opacity:1;} 
+    }
+    
+    @keyframes slideDown { 
+      from {
+        opacity:0; 
+        transform:translateY(-30px);
+      } 
+      to {
+        opacity:1;
+        transform: translateY(0);
+      } 
+    }
+    
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    @keyframes scaleUp {
+      from {
+        opacity: 0;
+        transform: scale(0.8);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+    
+    /* Responsive */
+    @media(max-width:768px){
+      h1 {
+        font-size:2rem; 
+        padding:20px 30px;
+      }
+      
+      .tagline {
+        font-size: 1rem;
+      }
+      
+      .service-button {
+        font-size:1.1rem; 
+        padding:16px 30px;
+        min-width: 240px;
+      }
+      
+      .apps, .pickup-form {
+        padding: 1.5rem;
+        margin-left: 20px;
+        margin-right: 20px;
+      }
+      
+      .app-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+    
+    @media(max-width:480px){
+      h1 {
+        font-size:1.6rem;
+      }
+      
+      .service-container {
+        gap: 15px;
+      }
+      
+      .service-button {
+        min-width: 100%;
+      }
+      
+      .app-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .popup-content {
+        margin: 5vh auto;
+        padding: 1.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+   <div class="logo">Pizza Lezzeti</div>
+
+  <div id="popup" class="popup" onclick="closePopupByBg(event)">
+    <div class="popup-content">
+      <span class="close" onclick="closePopup()">&times;</span>
+      <h2>🎉 Özel Yaz İndirimi!</h2>
+      <p>İlk siparişinizde %30 indirim fırsatını kaçırmayın! Kampanya sadece bu hafta geçerli.</p>
+      <div class="coupon-code">YAZ30</div>
+      <div class="benefits">
+        <div class="benefit-item">
+          <span class="benefit-icon">✓</span>
+          <span>Tüm pizza çeşitlerinde geçerli</span>
+        </div>
+        <div class="benefit-item">
+          <span class="benefit-icon">✓</span>
+          <span>Minimum sipariş tutarı yok</span>
+        </div>
+        <div class="benefit-item">
+          <span class="benefit-icon">✓</span>
+          <span>Paket servis ve gel-al seçenekleri</span>
+        </div>
+      </div>
+      
+      <img src="https://images.unsplash.com/photo-1604382354936-07c5d9983bd3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" 
+           alt="Özel Kampanya" 
+           class="popup-image">
+    </div>
+  </div>
+
+  
+  <div class="container">
+    <h1>Lezzet Dolu Bir Deneyim Sizi Bekliyor</h1>
+    <div class="tagline">Taze malzemelerle hazırlanan nefis pizzalarımızı dilediğiniz şekilde sipariş edin</div>
+    
+    <div class="service-container">
+      <button class="service-button" onclick="showApps()">
+        <span class="icon">🚚</span>
+        <span>Paket Servis</span>
+      </button>
+      <button class="service-button" onclick="goToPickup()">
+        <span class="icon">🏃‍♂️</span>
+        <span>Gel-Al (Şubeden Teslim)</span>
+      </button>
+    </div>
+
+    <div id="apps" class="apps">
+      <h2>Tercih Ettiğiniz Uygulamadan Sipariş Verin</h2>
+      <p>Favori yemek sipariş uygulamanızı seçerek lezzetli pizzalarımıza ulaşabilirsiniz</p>
+      <div class="app-grid">
+        <div class="app-card" onclick="redirectTo('https://www.yemeksepeti.com')">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/48/Yemeksepeti_logo.svg/1200px-Yemeksepeti_logo.svg.png" alt="Yemeksepeti">
+          <h3>Yemeksepeti</h3>
+        </div>
+        <div class="app-card" onclick="redirectTo('https://getir.com/yemek')">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/69/Getir_logo.svg/1200px-Getir_logo.svg.png" alt="Getir Yemek">
+          <h3>Getir Yemek</h3>
+        </div>
+        <div class="app-card" onclick="redirectTo('https://trendyol.com/yemek')">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/Trendyol_logo.svg/1200px-Trendyol_logo.svg.png" alt="Trendyol Yemek">
+          <h3>Trendyol Yemek</h3>
+        </div>
+        <div class="app-card" onclick="redirectTo('https://migros.com.tr')">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/8a/Migros_logo.svg/1200px-Migros_logo.svg.png" alt="Migros">
+          <h3>Migros</h3>
+        </div>
+      </div>
+    </div>
+
+    <div id="pickup" class="pickup-form">
+      <h2>Şube Seçimi ve Teslimat Saati</h2>
+      <p>Size en yakın şubemizi seçerek siparişinizi hazırlanma sürecini takip edebilirsiniz</p>
+      <form onsubmit="submitPickup(event)">
+        <div class="form-group">
+          <label for="city">İl:</label>
+          <select id="city" required>
+            <option value="">Seçiniz</option>
+            <option>İstanbul</option>
+            <option>Ankara</option>
+            <option>İzmir</option>
+            <option>Bursa</option>
+            <option>Antalya</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="district">İlçe:</label>
+          <select id="district" required>
+            <option value="">Önce il seçiniz</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="branch">Şube:</label>
+          <select id="branch" required>
+            <option value="">Önce ilçe seçiniz</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="time">Teslim Saati:</label>
+          <input type="time" id="time" required min="11:00" max="23:00">
+        </div>
+        <button type="submit">
+          <span class="icon">🍕</span>
+          Siparişi Tamamla
+        </button>
+      </form>
+    </div>
+  </div>
+<!-- Menüye git butonu -->
+<a href="üçüncüsayfa.html" class="service-button" style="margin-top:20px; display:inline-block;">
+  Menüye Git
+</a>
+  <script>
+    // Popup işlemleri
+    window.onload = () => {
+      setTimeout(() => {
+        document.getElementById("popup").style.display = "block";
+      }, 1500);
+      loadLocationData();
+    };
+    function closePopup(){ 
+      document.getElementById("popup").style.display = "none"; 
+    }
+    function closePopupByBg(e){
+      if(e.target.id === "popup") closePopup();
+    }
+
+    // Uygulamaları göster
+    function showApps(){ 
+      document.getElementById("apps").style.display = "block"; 
+      document.getElementById("pickup").style.display = "none";
+      document.getElementById("apps").scrollIntoView({behavior:'smooth'}); 
+    }
+    // Gel-Al formunu göster
+    function goToPickup(){ 
+      document.getElementById("pickup").style.display = "block"; 
+      document.getElementById("apps").style.display = "none";
+      document.getElementById("pickup").scrollIntoView({behavior:'smooth'}); 
+    }
+    // Uygulamaya yönlendirme
+    function redirectTo(url) {
+      window.open(url, '_blank');
+    }
+    // Gel-Al formu gönderimi
+    function submitPickup(e){ 
+      e.preventDefault(); 
+      Swal.fire({
+        title: 'Siparişiniz Alındı!',
+        text: 'Şube ve saat seçiminiz kaydedildi. Sipariş sayfasına yönlendiriliyorsunuz...',
+        icon: 'success',
+        confirmButtonText: 'Tamam',
+        timer: 3000,
+        timerProgressBar: true
+      }).then(() => {
+        window.location.href = "menu.html";
+      });
+    }
+     function submitPickup(e){ 
+    e.preventDefault(); 
+    const branch = document.getElementById('branch').value;
+    if(branch){
+      localStorage.setItem('selectedBranch', branch);
+    }
+    Swal.fire({
+      title: 'Siparişiniz Alındı!',
+      text: 'Şube ve saat seçiminiz kaydedildi. Menüye yönlendiriliyorsunuz...',
+      icon: 'success',
+      confirmButtonText: 'Tamam',
+      timer: 2000,
+      timerProgressBar: true
+    }).then(() => {
+      window.location.href = "üçüncüsayfa.html";
+    });
+  }
+
+    // Şehir ve ilçe verileri
+    const locationData = {
+      'İstanbul': ['Kadıköy', 'Beşiktaş', 'Şişli', 'Bakırköy', 'Üsküdar'],
+      'Ankara': ['Çankaya', 'Keçiören', 'Yenimahalle', 'Etimesgut', 'Sincan'],
+      'İzmir': ['Konak', 'Karşıyaka', 'Bornova', 'Buca', 'Alsancak'],
+      'Bursa': ['Osmangazi', 'Nilüfer', 'Yıldırım', 'Gemlik', 'Mudanya'],
+      'Antalya': ['Muratpaşa', 'Konyaaltı', 'Kepez', 'Lara', 'Kemer']
+    };
+    const branchData = {
+      'Kadıköy': ['Moda Şube', 'Bağdat Caddesi Şube', 'Kadıköy Merkez'],
+      'Beşiktaş': ['Beşiktaş Merkez', 'Ortaköy Şube', 'Etiler Şube'],
+      'Şişli': ['Şişli Merkez', 'Mecidiyeköy Şube'],
+      'Bakırköy': ['Bakırköy Merkez', 'Ataköy Şube'],
+      'Üsküdar': ['Üsküdar Merkez', 'Çengelköy Şube'],
+      'Çankaya': ['Çankaya Merkez', 'Kızılay Şube', 'Bahçelievler Şube'],
+      'Keçiören': ['Keçiören Merkez', 'Etlik Şube'],
+      'Yenimahalle': ['Yenimahalle Merkez', 'Batıkent Şube'],
+      'Etimesgut': ['Etimesgut Merkez'],
+      'Sincan': ['Sincan Merkez'],
+      'Konak': ['Konak Merkez', 'Alsancak Şube', 'Karataş Şube'],
+      'Karşıyaka': ['Karşıyaka Merkez', 'Bostanlı Şube'],
+      'Bornova': ['Bornova Merkez', 'Ege Üniversitesi Şube'],
+      'Buca': ['Buca Merkez'],
+      'Alsancak': ['Alsancak Merkez'],
+      'Osmangazi': ['Osmangazi Merkez'],
+      'Nilüfer': ['Nilüfer Merkez', 'Görükle Şube'],
+      'Yıldırım': ['Yıldırım Merkez'],
+      'Gemlik': ['Gemlik Merkez'],
+      'Mudanya': ['Mudanya Merkez'],
+      'Muratpaşa': ['Muratpaşa Merkez'],
+      'Konyaaltı': ['Konyaaltı Merkez'],
+      'Kepez': ['Kepez Merkez'],
+      'Lara': ['Lara Merkez'],
+      'Kemer': ['Kemer Merkez']
+    };
+
+    // Şehir ve ilçe verilerini yükle
+    function loadLocationData() {
+      const citySelect = document.getElementById('city');
+      const districtSelect = document.getElementById('district');
+      const branchSelect = document.getElementById('branch');
+      citySelect.addEventListener('change', function() {
+        const selectedCity = this.value;
+        districtSelect.innerHTML = '<option value="">Seçiniz</option>';
+        branchSelect.innerHTML = '<option value="">Önce ilçe seçiniz</option>';
+        if (selectedCity && locationData[selectedCity]) {
+          locationData[selectedCity].forEach(district => {
+            const option = document.createElement('option');
+            option.value = district;
+            option.textContent = district;
+            districtSelect.appendChild(option);
+          });
+        }
+      });
+      districtSelect.addEventListener('change', function() {
+        const selectedDistrict = this.value;
+        branchSelect.innerHTML = '<option value="">Seçiniz</option>';
+        if (selectedDistrict && branchData[selectedDistrict]) {
+          branchData[selectedDistrict].forEach(branch => {
+            const option = document.createElement('option');
+            option.value = branch;
+            option.textContent = branch;
+            branchSelect.appendChild(option);
+          });
+        }
+      });
+    }
+  </script>
+</body>
+</html>

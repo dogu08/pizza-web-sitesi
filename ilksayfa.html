@@ -1,0 +1,1045 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pizza LazzA - Otantik Napoli Usulü Pizza</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --primary: #e63946;
+      --primary-dark: #c1121f;
+      --secondary: #f8f9fa;
+      --accent: #a8dadc;
+      --dark: #212529;
+      --light: #f8f9fa;
+    }
+    
+    body {
+      font-family: 'Poppins', sans-serif;
+      color: var(--dark);
+      overflow-x: hidden;
+    }
+    
+    .hero-overlay {
+      background: linear-gradient(135deg, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.4) 100%);
+    }
+    
+    .title-font {
+      font-family: 'Playfair Display', serif;
+    }
+    
+    .pizza-card {
+      transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    }
+    
+    .pizza-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 14px 28px rgba(0,0,0,0.1), 0 10px 10px rgba(0,0,0,0.08);
+    }
+    
+    .location-card {
+      transition: all 0.3s ease;
+    }
+    
+    .location-card:hover {
+      transform: scale(1.03);
+    }
+    
+    .order-btn {
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    
+    .order-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    }
+    
+    .scroll-container {
+      scrollbar-width: thin;
+      scrollbar-color: var(--primary) transparent;
+    }
+    
+    .scroll-container::-webkit-scrollbar {
+      height: 6px;
+    }
+    
+    .scroll-container::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    
+    .scroll-container::-webkit-scrollbar-thumb {
+      background-color: var(--primary);
+      border-radius: 20px;
+    }
+    
+    .floating-notification {
+      animation: slideDown 0.5s ease-out forwards;
+    }
+    
+    @keyframes slideDown {
+      from {
+        opacity: 0;
+        transform: translateY(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    .pulse-animation {
+      animation: pulse 2s infinite;
+    }
+    
+    @keyframes pulse {
+      0% {
+        box-shadow: 0 0 0 0 rgba(230, 57, 70, 0.7);
+      }
+      70% {
+        box-shadow: 0 0 0 10px rgba(230, 57, 70, 0);
+      }
+      100% {
+        box-shadow: 0 0 0 0 rgba(230, 57, 70, 0);
+      }
+    }
+  </style>
+</head>
+<body class="bg-gray-50">
+  <!-- Navigation -->
+  <nav class="bg-white shadow-md sticky top-0 z-50">
+    <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+      <div class="flex items-center">
+        <span class="title-font text-2xl font-bold text-red-600">Pizza LazzA</span>
+      </div>
+      <div class="hidden md:flex space-x-8">
+        <a href="#" class="text-gray-800 hover:text-red-600 font-medium">Ana Sayfa</a>
+        <a href="#" class="text-gray-800 hover:text-red-600 font-medium">Menü</a>
+        <a href="#" class="text-gray-800 hover:text-red-600 font-medium">Şubeler</a>
+        <a href="#" class="text-gray-800 hover:text-red-600 font-medium">Kampanyalar</a>
+        <a href="#" class="text-gray-800 hover:text-red-600 font-medium">Hakkımızda</a>
+      </div>
+      <div class="flex items-center space-x-4">
+        <button class="md:hidden text-gray-800">
+          <i class="fas fa-bars text-xl"></i>
+        </button>
+        <button class="hidden md:block bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition">
+          <i class="fas fa-phone-alt mr-2"></i>0850 123 4567
+        </button>
+      </div>
+    </div>
+  </nav>
+  <!-- Ana sayfanın uygun yerine ekle -->
+<div class="flex justify-center mt-8 space-x-4">
+  <a href="ikincisayfa.html" class="order-btn px-6 py-3 rounded-lg font-semibold bg-red-600 text-white hover:bg-red-700 transition">
+    Siparişe Başla
+  </a>
+  <a href="üçüncüsayfa.html" class="order-btn px-6 py-3 rounded-lg font-semibold bg-yellow-400 text-black hover:bg-yellow-500 transition">
+    Menüye Git
+  </a>
+</div>
+
+  <!-- Hero Section with Location Detection -->
+  <div class="relative h-screen max-h-[900px] overflow-hidden">
+    <div class="absolute inset-0 hero-overlay"></div>
+    <img src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1682&q=80" 
+         alt="Pizza LazzA'nın ödüllü neapolitan pizzası" 
+         class="w-full h-full object-cover object-center">
+    
+    <div class="relative z-10 container mx-auto px-4 h-full flex flex-col justify-center">
+      <div class="max-w-2xl mx-auto text-center">
+        <h1 class="title-font text-4xl md:text-6xl font-bold text-white mb-6">Gerçek Napoli Lezzeti</h1>
+        <p class="text-xl md:text-2xl text-white mb-8">İtalya'dan ödüllü şeflerimizle hazırlanan otantik neapolitan pizzalar</p>
+        
+        <!-- Location Selection Component -->
+        <div class="bg-white bg-opacity-95 rounded-xl shadow-2xl p-6 max-w-md mx-auto transform transition-all duration-300 hover:scale-[1.01]">
+          <div class="flex items-center justify-between mb-4">
+            <h2 class="text-xl font-semibold text-gray-800">Size en yakın şubemiz</h2>
+            <button class="text-sm text-red-600 font-medium hover:underline flex items-center">
+              <i class="fas fa-sync-alt mr-1"></i> Konumu Yenile
+            </button>
+          </div>
+          
+          <div id="locationResults" class="space-y-3 mb-4 max-h-60 overflow-y-auto pr-2 scroll-container">
+            <div class="location-card bg-white shadow-md hover:shadow-xl rounded-lg p-4 cursor-pointer border-l-4 border-transparent hover:border-red-500">
+              <div class="flex justify-between items-start">
+                <div>
+                  <h3 class="font-semibold text-gray-800">İstanbul - Nişantaşı</h3>
+                  <p class="text-sm text-gray-600 mt-1">Teşvikiye Mahallesi, Polat Sokak No:42</p>
+                </div>
+                <span class="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full">En yakın</span>
+              </div>
+              <div class="flex justify-between items-center mt-3">
+                <p class="text-sm text-gray-600"><i class="far fa-clock mr-1"></i> 10:00 - 23:00</p>
+                <p class="text-sm font-medium text-green-600"><i class="fas fa-bolt mr-1"></i> 15 dakika</p>
+              </div>
+            </div>
+            
+            <div class="location-card bg-white shadow-md hover:shadow-xl rounded-lg p-4 cursor-pointer border-l-4 border-transparent hover:border-red-500">
+              <div class="flex justify-between">
+                <div>
+                  <h3 class="font-semibold text-gray-800">İstanbul - Kadıköy</h3>
+                  <p class="text-sm text-gray-600 mt-1">Caferağa Mahallesi, Moda Caddesi No:56</p>
+                </div>
+              </div>
+              <div class="flex justify-between items-center mt-3">
+                <p class="text-sm text-gray-600"><i class="far fa-clock mr-1"></i> 10:30 - 23:30</p>
+                <p class="text-sm font-medium text-green-600"><i class="fas fa-bolt mr-1"></i> 20 dakika</p>
+              </div>
+            </div>
+            
+            <div class="location-card bg-white shadow-md hover:shadow-xl rounded-lg p-4 cursor-pointer border-l-4 border-transparent hover:border-red-500">
+              <div class="flex justify-between">
+                <div>
+                  <h3 class="font-semibold text-gray-800">Ankara - Çankaya</h3>
+                  <p class="text-sm text-gray-600 mt-1">Yüzüncü Yıl Mahallesi, İlkbahar Sokak No:15</p>
+                </div>
+              </div>
+              <div class="flex justify-between items-center mt-3">
+                <p class="text-sm text-gray-600"><i class="far fa-clock mr-1"></i> 10:30 - 22:30</p>
+                <p class="text-sm font-medium text-green-600"><i class="fas fa-bolt mr-1"></i> 25 dakika</p>
+              </div>
+            </div>
+          </div>
+          
+          <div class="grid grid-cols-2 gap-4 mt-6">
+            <button id="deliveryBtn" class="order-btn py-3 px-4 bg-red-600 text-white rounded-lg font-semibold hover:bg-red-700 transition flex items-center justify-center">
+              <i class="fas fa-motorcycle mr-2"></i> Paket Servis
+            </button>
+            <button id="pickupBtn" class="order-btn py-3 px-4 bg-gray-100 text-gray-800 rounded-lg font-semibold hover:bg-gray-200 transition flex items-center justify-center">
+              <i class="fas fa-store mr-2"></i> Gel Al
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Scroll indicator -->
+    <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
+      <i class="fas fa-chevron-down text-white text-2xl"></i>
+    </div>
+  </div>
+
+<!-- USP Section -->
+<div class="bg-white py-16">
+  <div class="container mx-auto px-4">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+      <div class="text-center p-6 rounded-xl hover:bg-gray-50 transition">
+        <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+          <i class="fas fa-fire text-red-600 text-2xl"></i>
+        </div>
+        <h3 class="text-xl font-bold mb-2">Odun Ateşinde Pişirme</h3>
+        <p class="text-gray-600">Pizzalarımız Napoli'den özel ithal odun fırınlarında pişirilir</p>
+      </div>
+      <div class="text-center p-6 rounded-xl hover:bg-gray-50 transition">
+        <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+          <i class="fas fa-wheat-alt text-red-600 text-2xl"></i>
+        </div>
+        <h3 class="text-xl font-bold mb-2">Özel Karışım Un</h3>
+        <p class="text-gray-600">İtalya'dan özel ithal edilen "00" tipi un ile hazırlanır</p>
+      </div>
+      <div class="text-center p-6 rounded-xl hover:bg-gray-50 transition">
+        <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+          <i class="fas fa-cheese text-red-600 text-2xl"></i>
+        </div>
+        <h3 class="text-xl font-bold mb-2">Otantik Malzemeler</h3>
+        <p class="text-gray-600">San Marzano domatesi ve mozzarella di bufala kullanıyoruz</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+  <!-- Featured Locations Section -->
+<div class="bg-gray-50 py-16">
+  <div class="container mx-auto px-4">
+    <div class="text-center mb-12">
+      <h2 class="title-font text-3xl md:text-4xl font-bold text-gray-800 mb-3">Şubelerimiz</h2>
+      <p class="text-gray-600 max-w-2xl mx-auto">Pizza LazzA lezzeti şimdi Türkiye'nin seçkin lokasyonlarında</p>
+    </div>
+    <div class="flex overflow-x-auto pb-6 space-x-6 snap-x scroll-smooth scroll-container">
+      <!-- İstanbul Nişantaşı -->
+      <div class="location-card bg-white rounded-xl overflow-hidden shadow-md min-w-[300px] snap-start flex flex-col">
+        <div class="h-48 overflow-hidden relative">
+          <img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" 
+               alt="Pizza LazzA Istanbul Nişantaşı şubesi" 
+               class="w-full h-full object-cover">
+          <div class="absolute top-4 left-4 bg-red-600 text-white px-3 py-1 rounded-full text-sm font-semibold">
+            <i class="fas fa-crown mr-1"></i> Flagship
+          </div>
+        </div>
+        <div class="p-6 flex-grow">
+          <h3 class="font-bold text-xl text-gray-800">İstanbul - Nişantaşı</h3>
+          <p class="text-gray-600 mt-2"><i class="fas fa-map-marker-alt text-red-500 mr-2"></i>Teşvikiye Mahallesi, Polat Sokak No:42</p>
+          <div class="mt-4 flex items-center text-sm text-gray-600">
+            <i class="far fa-clock text-red-500 mr-2"></i>
+            <span>Çalışma Saatleri: <strong>10:00 - 23:00</strong></span>
+          </div>
+          <div class="mt-3 flex items-center text-sm text-gray-600">
+            <i class="fas fa-phone-alt text-red-500 mr-2"></i>
+            <span>0 (212) 123 4567</span>
+          </div>
+        </div>
+        <div class="px-6 pb-6">
+          <button class="w-full order-btn px-4 py-3 bg-red-600 text-white rounded-lg font-semibold hover:bg-red-700 transition flex items-center justify-center pulse-animation">
+            <i class="fas fa-pizza-slice mr-2"></i> Hemen Sipariş Ver
+          </button>
+        </div>
+      </div>
+      <!-- Ankara Çankaya -->
+      <div class="location-card bg-white rounded-xl overflow-hidden shadow-md min-w-[300px] snap-start flex flex-col">
+        <div class="h-48 overflow-hidden relative">
+          <img src="https://images.unsplash.com/photo-1555396273-367ea4eb4db5?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1374&q=80" 
+               alt="Pizza LazzA Ankara Çankaya şubesi" 
+               class="w-full h-full object-cover">
+        </div>
+        <div class="p-6 flex-grow">
+          <h3 class="font-bold text-xl text-gray-800">Ankara - Çankaya</h3>
+          <p class="text-gray-600 mt-2"><i class="fas fa-map-marker-alt text-red-500 mr-2"></i>Yüzüncü Yıl Mahallesi, İlkbahar Sokak No:15</p>
+          <div class="mt-4 flex items-center text-sm text-gray-600">
+            <i class="far fa-clock text-red-500 mr-2"></i>
+            <span>Çalışma Saatleri: <strong>10:30 - 22:30</strong></span>
+          </div>
+          <div class="mt-3 flex items-center text-sm text-gray-600">
+            <i class="fas fa-phone-alt text-red-500 mr-2"></i>
+            <span>0 (312) 123 4567</span>
+          </div>
+        </div>
+        <div class="px-6 pb-6">
+          <button class="w-full order-btn px-4 py-3 bg-red-600 text-white rounded-lg font-semibold hover:bg-red-700 transition flex items-center justify-center">
+            <i class="fas fa-pizza-slice mr-2"></i> Hemen Sipariş Ver
+          </button>
+        </div>
+      </div>
+      <!-- İzmir Alsancak -->
+      <div class="location-card bg-white rounded-xl overflow-hidden shadow-md min-w-[300px] snap-start flex flex-col">
+        <div class="h-48 overflow-hidden relative">
+          <img src="https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" 
+               alt="Pizza LazzA İzmir Alsancak şubesi" 
+               class="w-full h-full object-cover">
+        </div>
+        <div class="p-6 flex-grow">
+          <h3 class="font-bold text-xl text-gray-800">İzmir - Alsancak</h3>
+          <p class="text-gray-600 mt-2"><i class="fas fa-map-marker-alt text-red-500 mr-2"></i>Alsancak Mahallesi, Kıbrıs Şehitleri Cd. No:112</p>
+          <div class="mt-4 flex items-center text-sm text-gray-600">
+            <i class="far fa-clock text-red-500 mr-2"></i>
+            <span>Çalışma Saatleri: <strong>11:00 - 23:30</strong></span>
+          </div>
+          <div class="mt-3 flex items-center text-sm text-gray-600">
+            <i class="fas fa-phone-alt text-red-500 mr-2"></i>
+            <span>0 (232) 123 4567</span>
+          </div>
+        </div>
+        <div class="px-6 pb-6">
+          <button class="w-full order-btn px-4 py-3 bg-red-600 text-white rounded-lg font-semibold hover:bg-red-700 transition flex items-center justify-center">
+            <i class="fas fa-pizza-slice mr-2"></i> Hemen Sipariş Ver
+          </button>
+        </div>
+      </div>
+      <!-- Bursa Nilüfer -->
+      <div class="location-card bg-white rounded-xl overflow-hidden shadow-md min-w-[300px] snap-start flex flex-col">
+        <div class="h-48 overflow-hidden relative">
+          <img src="https://images.unsplash.com/photo-1555396273-367ea4eb4db5?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1374&q=80" 
+               alt="Pizza LazzA Bursa Nilüfer şubesi" 
+               class="w-full h-full object-cover">
+        </div>
+        <div class="p-6 flex-grow">
+          <h3 class="font-bold text-xl text-gray-800">Bursa - Nilüfer</h3>
+          <p class="text-gray-600 mt-2"><i class="fas fa-map-marker-alt text-red-500 mr-2"></i>Güzelyalı Mahallesi, Nilüfer Caddesi No:8</p>
+          <div class="mt-4 flex items-center text-sm text-gray-600">
+            <i class="far fa-clock text-red-500 mr-2"></i>
+            <span>Çalışma Saatleri: <strong>11:00 - 23:00</strong></span>
+          </div>
+          <div class="mt-3 flex items-center text-sm text-gray-600">
+            <i class="fas fa-phone-alt text-red-500 mr-2"></i>
+            <span>0 (224) 123 4567</span>
+          </div>
+        </div>
+        <div class="px-6 pb-6">
+          <button class="w-full order-btn px-4 py-3 bg-red-600 text-white rounded-lg font-semibold hover:bg-red-700 transition flex items-center justify-center">
+            <i class="fas fa-pizza-slice mr-2"></i> Hemen Sipariş Ver
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="text-center mt-8">
+      <button class="inline-flex items-center px-6 py-3 border border-red-600 text-red-600 rounded-lg hover:bg-red-50 transition font-medium">
+        <i class="fas fa-map-marker-alt mr-2"></i> Tüm Şubeleri Gör
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Mobil uygulama butonları -->
+<div class="flex flex-col sm:flex-row justify-center md:justify-start space-y-4 sm:space-y-0 sm:space-x-4">
+  <button class="bg-black hover:bg-gray-900 text-white px-6 py-3 rounded-lg flex items-center justify-center transition">
+    <i class="fab fa-apple text-2xl mr-3"></i>
+    <div class="text-left">
+      <div class="text-xs">Download on the</div>
+      <div class="text-xl font-semibold">App Store</div>
+    </div>
+  </button>
+  <button class="bg-black hover:bg-gray-900 text-white px-6 py-3 rounded-lg flex items-center justify-center transition">
+    <i class="fab fa-google-play text-2xl mr-3"></i>
+    <div class="text-left">
+      <div class="text-xs">Get it on</div>
+      <div class="text-xl font-semibold">Google Play</div>
+    </div>
+  </button>
+</div>
+        
+        <div class="md:w-1/2 flex justify-center">
+          <div class="relative max-w-md">
+            <img src="https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" 
+                 alt="Pizza LazzA mobil uygulama ekran görüntüsü" 
+                 class="rounded-xl shadow-2xl w-full max-w-xs transform rotate-3">
+            <img src="https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" 
+                 alt="Pizza LazzA mobil uygulama ekran görüntüsü" 
+                 class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-xl shadow-2xl w-full max-w-xs transform -rotate-3 z-10">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="bg-gray-900 text-white pt-16 pb-8">
+    <div class="container mx-auto px-4">
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+        <div>
+          <h3 class="title-font text-xl font-bold mb-4">Pizza LazzA</h3>
+          <p class="text-gray-400">Türkiye'nin en otantik neapolitan pizza deneyimini sunuyoruz. İtalya'dan ödüllü şeflerimizle...</p>
+          <div class="flex space-x-4 mt-4">
+            <a href="#" class="text-gray-400 hover:text-white transition"><i class="fab fa-facebook-f"></i></a>
+            <a href="#" class="text-gray-400 hover:text-white transition"><i class="fab fa-instagram"></i></a>
+            <a href="#" class="text-gray-400 hover:text-white transition"><i class="fab fa-twitter"></i></a>
+          </div>
+        </div>
+        
+        <div>
+          <h4 class="font-bold text-lg mb-4">Hızlı Linkler</h4>
+          <ul class="space-y-2">
+            <li><a href="#" class="text-gray-400 hover:text-white transition">Ana Sayfa</a></li>
+            <li><a href="#" class="text-gray-400 hover:text-white transition">Menü</a></li>
+            <li><a href="#" class="text-gray-400 hover:text-white transition">Şubeler</a></li>
+            <li><a href="#" class="text-gray-400 hover:text-white transition">Kampanyalar</a></li>
+            <li><a href="#" class="text-gray-400 hover:text-white transition">Hakkımızda</a></li>
+          </ul>
+        </div>
+        
+        <div>
+          <h4 class="font-bold text-lg mb-4">İletişim</h4>
+          <ul class="space-y-2">
+            <li class="flex items-center text-gray-400"><i class="fas fa-phone-alt mr-2"></i> 0850 123 4567</li>
+            <li class="flex items-center text-gray-400"><i class="fas fa-envelope mr-2"></i> info@pizzalazza.com</li>
+            <li class="flex items-center text-gray-400"><i class="fas fa-map-marker-alt mr-2"></i> Genel Merkez: İstanbul</li>
+          </ul>
+        </div>
+        
+        <div>
+          <h4 class="font-bold text-lg mb-4">Bülten Aboneliği</h4>
+          <p class="text-gray-400 mb-4">Kampanya ve yeniliklerden haberdar olmak için kayıt olun</p>
+          <form class="flex">
+            <input type="email" placeholder="E-posta adresiniz" class="px-4 py-2 rounded-l-lg w-full text-gray-800">
+            <button type="submit" class="bg-red-600 hover:bg-red-700 px-4 py-2 rounded-r-lg transition">
+              <i class="fas fa-paper-plane"></i>
+            </button>
+          </form>
+        </div>
+      </div>
+      
+      <div class="border-t border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center">
+        <p class="text-gray-400 text-sm mb-4 md:mb-0">© 2023 Pizza LazzA. Tüm hakları saklıdır.</p>
+        <div class="flex space-x-6">
+          <a href="#" class="text-gray-400 hover:text-white text-sm transition">Gizlilik Politikası</a>
+          <a href="#" class="text-gray-400 hover:text-white text-sm transition">Çerez Politikası</a>
+          <a href="#" class="text-gray-400 hover:text-white text-sm transition">Kullanım Koşulları</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Simulate location detection
+    document.addEventListener('DOMContentLoaded', function() {
+      // In a real app, this would use geolocation API or IP lookup
+      const detectedCity = 'İstanbul';
+      const locationElements = document.querySelectorAll('#locationResults .location-card h3');
+      
+      // Highlight nearest location
+      locationElements.forEach(el => {
+        if (el.textContent.includes(detectedCity)) {
+          el.closest('.location-card').classList.add('ring-2', 'ring-red-500', 'ring-offset-2', 'ring-offset-white');
+        }
+      });
+      
+      // Add click handlers for location cards
+      document.querySelectorAll('.location-card').forEach(card => {
+        card.addEventListener('click', function() {
+          const location = this.querySelector('h3').textContent;
+          showNotification(`<i class="fas fa-check-circle mr-2"></i> ${location} şubesi seçildi!`);
+        });
+      });
+      
+      // Delivery button handler
+      document.getElementById('deliveryBtn').addEventListener('click', function() {
+        showNotification(`<i class="fas fa-motorcycle mr-2"></i> Paket servis siparişi oluşturuluyor...`);
+        setTimeout(() => {
+          window.open('https://www.yemeksepeti.com', '_blank');
+        }, 1500);
+      });
+
+      // Pickup button handler
+      document.getElementById('pickupBtn').addEventListener('click', function() {
+        showNotification(`<i class="fas fa-store mr-2"></i> Gel-Al siparişi oluşturuluyor...`);
+      });
+      
+      // Order buttons handler
+      document.querySelectorAll('.order-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+          const location = this.closest('.location-card').querySelector('h3').textContent;
+          showNotification(`<i class="fas fa-pizza-slice mr-2"></i> ${location} için sipariş oluşturuluyor...`);
+        });
+      });
+    });
+
+    function showNotification(message) {
+      const notification = document.createElement('div');
+      notification.className = 'fixed top-4 left-1/2 transform -translate-x-1/2 z-50 floating-notification';
+      notification.innerHTML = `
+        <div class="bg-white text-gray-800 px-6 py-3 rounded-lg shadow-lg flex items-center">
+          ${message}
+        </div>
+      `;
+      document.body.appendChild(notification);
+      setTimeout(() => {
+        notification.remove();
+      }, 3000);
+    }
+  </script>
+</body>
+</html><!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pizza LazzA - Otantik Napoli Usulü Pizza</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --primary: #e63946;
+      --primary-dark: #c1121f;
+      --secondary: #f8f9fa;
+      --accent: #a8dadc;
+      --dark: #212529;
+      --light: #f8f9fa;
+    }
+    
+    body {
+      font-family: 'Poppins', sans-serif;
+      color: var(--dark);
+      overflow-x: hidden;
+    }
+    
+    .hero-overlay {
+      background: linear-gradient(135deg, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.4) 100%);
+    }
+    
+    .title-font {
+      font-family: 'Playfair Display', serif;
+    }
+    
+    .pizza-card {
+      transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    }
+    
+    .pizza-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 14px 28px rgba(0,0,0,0.1), 0 10px 10px rgba(0,0,0,0.08);
+    }
+    
+    .location-card {
+      transition: all 0.3s ease;
+    }
+    
+    .location-card:hover {
+      transform: scale(1.03);
+    }
+    
+    .order-btn {
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    
+    .order-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    }
+    
+    .scroll-container {
+      scrollbar-width: thin;
+      scrollbar-color: var(--primary) transparent;
+    }
+    
+    .scroll-container::-webkit-scrollbar {
+      height: 6px;
+    }
+    
+    .scroll-container::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    
+    .scroll-container::-webkit-scrollbar-thumb {
+      background-color: var(--primary);
+      border-radius: 20px;
+    }
+    
+    .floating-notification {
+      animation: slideDown 0.5s ease-out forwards;
+    }
+    
+    @keyframes slideDown {
+      from {
+        opacity: 0;
+        transform: translateY(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    .pulse-animation {
+      animation: pulse 2s infinite;
+    }
+    
+    @keyframes pulse {
+      0% {
+        box-shadow: 0 0 0 0 rgba(230, 57, 70, 0.7);
+      }
+      70% {
+        box-shadow: 0 0 0 10px rgba(230, 57, 70, 0);
+      }
+      100% {
+        box-shadow: 0 0 0 0 rgba(230, 57, 70, 0);
+      }
+    }
+  </style>
+</head>
+<body class="bg-gray-50">
+  <!-- Navigation -->
+  <nav class="bg-white shadow-md sticky top-0 z-50">
+    <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+      <div class="flex items-center">
+        <span class="title-font text-2xl font-bold text-red-600">Pizza LazzA</span>
+      </div>
+      <div class="hidden md:flex space-x-8">
+        <a href="#" class="text-gray-800 hover:text-red-600 font-medium">Ana Sayfa</a>
+        <a href="#" class="text-gray-800 hover:text-red-600 font-medium">Menü</a>
+        <a href="#" class="text-gray-800 hover:text-red-600 font-medium">Şubeler</a>
+        <a href="#" class="text-gray-800 hover:text-red-600 font-medium">Kampanyalar</a>
+        <a href="#" class="text-gray-800 hover:text-red-600 font-medium">Hakkımızda</a>
+      </div>
+      <div class="flex items-center space-x-4">
+        <button class="md:hidden text-gray-800">
+          <i class="fas fa-bars text-xl"></i>
+        </button>
+        <button class="hidden md:block bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition">
+          <i class="fas fa-phone-alt mr-2"></i>0850 123 4567
+        </button>
+      </div>
+    </div>
+  </nav>
+  <!-- Ana sayfanın uygun yerine ekle -->
+<div class="flex justify-center mt-8 space-x-4">
+  <a href="ikincisayfa.html" class="order-btn px-6 py-3 rounded-lg font-semibold bg-red-600 text-white hover:bg-red-700 transition">
+    Siparişe Başla
+  </a>
+  <a href="üçüncüsayfa.html" class="order-btn px-6 py-3 rounded-lg font-semibold bg-yellow-400 text-black hover:bg-yellow-500 transition">
+    Menüye Git
+  </a>
+</div>
+
+  <!-- Hero Section with Location Detection -->
+  <div class="relative h-screen max-h-[900px] overflow-hidden">
+    <div class="absolute inset-0 hero-overlay"></div>
+    <img src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1682&q=80" 
+         alt="Pizza LazzA'nın ödüllü neapolitan pizzası" 
+         class="w-full h-full object-cover object-center">
+    
+    <div class="relative z-10 container mx-auto px-4 h-full flex flex-col justify-center">
+      <div class="max-w-2xl mx-auto text-center">
+        <h1 class="title-font text-4xl md:text-6xl font-bold text-white mb-6">Gerçek Napoli Lezzeti</h1>
+        <p class="text-xl md:text-2xl text-white mb-8">İtalya'dan ödüllü şeflerimizle hazırlanan otantik neapolitan pizzalar</p>
+        
+        <!-- Location Selection Component -->
+        <div class="bg-white bg-opacity-95 rounded-xl shadow-2xl p-6 max-w-md mx-auto transform transition-all duration-300 hover:scale-[1.01]">
+          <div class="flex items-center justify-between mb-4">
+            <h2 class="text-xl font-semibold text-gray-800">Size en yakın şubemiz</h2>
+            <button class="text-sm text-red-600 font-medium hover:underline flex items-center">
+              <i class="fas fa-sync-alt mr-1"></i> Konumu Yenile
+            </button>
+          </div>
+          
+          <div id="locationResults" class="space-y-3 mb-4 max-h-60 overflow-y-auto pr-2 scroll-container">
+            <div class="location-card bg-white shadow-md hover:shadow-xl rounded-lg p-4 cursor-pointer border-l-4 border-transparent hover:border-red-500">
+              <div class="flex justify-between items-start">
+                <div>
+                  <h3 class="font-semibold text-gray-800">İstanbul - Nişantaşı</h3>
+                  <p class="text-sm text-gray-600 mt-1">Teşvikiye Mahallesi, Polat Sokak No:42</p>
+                </div>
+                <span class="bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full">En yakın</span>
+              </div>
+              <div class="flex justify-between items-center mt-3">
+                <p class="text-sm text-gray-600"><i class="far fa-clock mr-1"></i> 10:00 - 23:00</p>
+                <p class="text-sm font-medium text-green-600"><i class="fas fa-bolt mr-1"></i> 15 dakika</p>
+              </div>
+            </div>
+            
+            <div class="location-card bg-white shadow-md hover:shadow-xl rounded-lg p-4 cursor-pointer border-l-4 border-transparent hover:border-red-500">
+              <div class="flex justify-between">
+                <div>
+                  <h3 class="font-semibold text-gray-800">İstanbul - Kadıköy</h3>
+                  <p class="text-sm text-gray-600 mt-1">Caferağa Mahallesi, Moda Caddesi No:56</p>
+                </div>
+              </div>
+              <div class="flex justify-between items-center mt-3">
+                <p class="text-sm text-gray-600"><i class="far fa-clock mr-1"></i> 10:30 - 23:30</p>
+                <p class="text-sm font-medium text-green-600"><i class="fas fa-bolt mr-1"></i> 20 dakika</p>
+              </div>
+            </div>
+            
+            <div class="location-card bg-white shadow-md hover:shadow-xl rounded-lg p-4 cursor-pointer border-l-4 border-transparent hover:border-red-500">
+              <div class="flex justify-between">
+                <div>
+                  <h3 class="font-semibold text-gray-800">Ankara - Çankaya</h3>
+                  <p class="text-sm text-gray-600 mt-1">Yüzüncü Yıl Mahallesi, İlkbahar Sokak No:15</p>
+                </div>
+              </div>
+              <div class="flex justify-between items-center mt-3">
+                <p class="text-sm text-gray-600"><i class="far fa-clock mr-1"></i> 10:30 - 22:30</p>
+                <p class="text-sm font-medium text-green-600"><i class="fas fa-bolt mr-1"></i> 25 dakika</p>
+              </div>
+            </div>
+          </div>
+          
+          <div class="grid grid-cols-2 gap-4 mt-6">
+            <button id="deliveryBtn" class="order-btn py-3 px-4 bg-red-600 text-white rounded-lg font-semibold hover:bg-red-700 transition flex items-center justify-center">
+              <i class="fas fa-motorcycle mr-2"></i> Paket Servis
+            </button>
+            <button id="pickupBtn" class="order-btn py-3 px-4 bg-gray-100 text-gray-800 rounded-lg font-semibold hover:bg-gray-200 transition flex items-center justify-center">
+              <i class="fas fa-store mr-2"></i> Gel Al
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Scroll indicator -->
+    <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
+      <i class="fas fa-chevron-down text-white text-2xl"></i>
+    </div>
+  </div>
+
+<!-- USP Section -->
+<div class="bg-white py-16">
+  <div class="container mx-auto px-4">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+      <div class="text-center p-6 rounded-xl hover:bg-gray-50 transition">
+        <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+          <i class="fas fa-fire text-red-600 text-2xl"></i>
+        </div>
+        <h3 class="text-xl font-bold mb-2">Odun Ateşinde Pişirme</h3>
+        <p class="text-gray-600">Pizzalarımız Napoli'den özel ithal odun fırınlarında pişirilir</p>
+      </div>
+      <div class="text-center p-6 rounded-xl hover:bg-gray-50 transition">
+        <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+          <i class="fas fa-wheat-alt text-red-600 text-2xl"></i>
+        </div>
+        <h3 class="text-xl font-bold mb-2">Özel Karışım Un</h3>
+        <p class="text-gray-600">İtalya'dan özel ithal edilen "00" tipi un ile hazırlanır</p>
+      </div>
+      <div class="text-center p-6 rounded-xl hover:bg-gray-50 transition">
+        <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+          <i class="fas fa-cheese text-red-600 text-2xl"></i>
+        </div>
+        <h3 class="text-xl font-bold mb-2">Otantik Malzemeler</h3>
+        <p class="text-gray-600">San Marzano domatesi ve mozzarella di bufala kullanıyoruz</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+  <!-- Featured Locations Section -->
+<div class="bg-gray-50 py-16">
+  <div class="container mx-auto px-4">
+    <div class="text-center mb-12">
+      <h2 class="title-font text-3xl md:text-4xl font-bold text-gray-800 mb-3">Şubelerimiz</h2>
+      <p class="text-gray-600 max-w-2xl mx-auto">Pizza LazzA lezzeti şimdi Türkiye'nin seçkin lokasyonlarında</p>
+    </div>
+    <div class="flex overflow-x-auto pb-6 space-x-6 snap-x scroll-smooth scroll-container">
+      <!-- İstanbul Nişantaşı -->
+      <div class="location-card bg-white rounded-xl overflow-hidden shadow-md min-w-[300px] snap-start flex flex-col">
+        <div class="h-48 overflow-hidden relative">
+          <img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" 
+               alt="Pizza LazzA Istanbul Nişantaşı şubesi" 
+               class="w-full h-full object-cover">
+          <div class="absolute top-4 left-4 bg-red-600 text-white px-3 py-1 rounded-full text-sm font-semibold">
+            <i class="fas fa-crown mr-1"></i> Flagship
+          </div>
+        </div>
+        <div class="p-6 flex-grow">
+          <h3 class="font-bold text-xl text-gray-800">İstanbul - Nişantaşı</h3>
+          <p class="text-gray-600 mt-2"><i class="fas fa-map-marker-alt text-red-500 mr-2"></i>Teşvikiye Mahallesi, Polat Sokak No:42</p>
+          <div class="mt-4 flex items-center text-sm text-gray-600">
+            <i class="far fa-clock text-red-500 mr-2"></i>
+            <span>Çalışma Saatleri: <strong>10:00 - 23:00</strong></span>
+          </div>
+          <div class="mt-3 flex items-center text-sm text-gray-600">
+            <i class="fas fa-phone-alt text-red-500 mr-2"></i>
+            <span>0 (212) 123 4567</span>
+          </div>
+        </div>
+        <div class="px-6 pb-6">
+          <button class="w-full order-btn px-4 py-3 bg-red-600 text-white rounded-lg font-semibold hover:bg-red-700 transition flex items-center justify-center pulse-animation">
+            <i class="fas fa-pizza-slice mr-2"></i> Hemen Sipariş Ver
+          </button>
+        </div>
+      </div>
+      <!-- Ankara Çankaya -->
+      <div class="location-card bg-white rounded-xl overflow-hidden shadow-md min-w-[300px] snap-start flex flex-col">
+        <div class="h-48 overflow-hidden relative">
+          <img src="https://images.unsplash.com/photo-1555396273-367ea4eb4db5?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1374&q=80" 
+               alt="Pizza LazzA Ankara Çankaya şubesi" 
+               class="w-full h-full object-cover">
+        </div>
+        <div class="p-6 flex-grow">
+          <h3 class="font-bold text-xl text-gray-800">Ankara - Çankaya</h3>
+          <p class="text-gray-600 mt-2"><i class="fas fa-map-marker-alt text-red-500 mr-2"></i>Yüzüncü Yıl Mahallesi, İlkbahar Sokak No:15</p>
+          <div class="mt-4 flex items-center text-sm text-gray-600">
+            <i class="far fa-clock text-red-500 mr-2"></i>
+            <span>Çalışma Saatleri: <strong>10:30 - 22:30</strong></span>
+          </div>
+          <div class="mt-3 flex items-center text-sm text-gray-600">
+            <i class="fas fa-phone-alt text-red-500 mr-2"></i>
+            <span>0 (312) 123 4567</span>
+          </div>
+        </div>
+        <div class="px-6 pb-6">
+          <button class="w-full order-btn px-4 py-3 bg-red-600 text-white rounded-lg font-semibold hover:bg-red-700 transition flex items-center justify-center">
+            <i class="fas fa-pizza-slice mr-2"></i> Hemen Sipariş Ver
+          </button>
+        </div>
+      </div>
+      <!-- İzmir Alsancak -->
+      <div class="location-card bg-white rounded-xl overflow-hidden shadow-md min-w-[300px] snap-start flex flex-col">
+        <div class="h-48 overflow-hidden relative">
+          <img src="https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" 
+               alt="Pizza LazzA İzmir Alsancak şubesi" 
+               class="w-full h-full object-cover">
+        </div>
+        <div class="p-6 flex-grow">
+          <h3 class="font-bold text-xl text-gray-800">İzmir - Alsancak</h3>
+          <p class="text-gray-600 mt-2"><i class="fas fa-map-marker-alt text-red-500 mr-2"></i>Alsancak Mahallesi, Kıbrıs Şehitleri Cd. No:112</p>
+          <div class="mt-4 flex items-center text-sm text-gray-600">
+            <i class="far fa-clock text-red-500 mr-2"></i>
+            <span>Çalışma Saatleri: <strong>11:00 - 23:30</strong></span>
+          </div>
+          <div class="mt-3 flex items-center text-sm text-gray-600">
+            <i class="fas fa-phone-alt text-red-500 mr-2"></i>
+            <span>0 (232) 123 4567</span>
+          </div>
+        </div>
+        <div class="px-6 pb-6">
+          <button class="w-full order-btn px-4 py-3 bg-red-600 text-white rounded-lg font-semibold hover:bg-red-700 transition flex items-center justify-center">
+            <i class="fas fa-pizza-slice mr-2"></i> Hemen Sipariş Ver
+          </button>
+        </div>
+      </div>
+      <!-- Bursa Nilüfer -->
+      <div class="location-card bg-white rounded-xl overflow-hidden shadow-md min-w-[300px] snap-start flex flex-col">
+        <div class="h-48 overflow-hidden relative">
+          <img src="https://images.unsplash.com/photo-1555396273-367ea4eb4db5?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1374&q=80" 
+               alt="Pizza LazzA Bursa Nilüfer şubesi" 
+               class="w-full h-full object-cover">
+        </div>
+        <div class="p-6 flex-grow">
+          <h3 class="font-bold text-xl text-gray-800">Bursa - Nilüfer</h3>
+          <p class="text-gray-600 mt-2"><i class="fas fa-map-marker-alt text-red-500 mr-2"></i>Güzelyalı Mahallesi, Nilüfer Caddesi No:8</p>
+          <div class="mt-4 flex items-center text-sm text-gray-600">
+            <i class="far fa-clock text-red-500 mr-2"></i>
+            <span>Çalışma Saatleri: <strong>11:00 - 23:00</strong></span>
+          </div>
+          <div class="mt-3 flex items-center text-sm text-gray-600">
+            <i class="fas fa-phone-alt text-red-500 mr-2"></i>
+            <span>0 (224) 123 4567</span>
+          </div>
+        </div>
+        <div class="px-6 pb-6">
+          <button class="w-full order-btn px-4 py-3 bg-red-600 text-white rounded-lg font-semibold hover:bg-red-700 transition flex items-center justify-center">
+            <i class="fas fa-pizza-slice mr-2"></i> Hemen Sipariş Ver
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="text-center mt-8">
+      <button class="inline-flex items-center px-6 py-3 border border-red-600 text-red-600 rounded-lg hover:bg-red-50 transition font-medium">
+        <i class="fas fa-map-marker-alt mr-2"></i> Tüm Şubeleri Gör
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Mobil uygulama butonları -->
+<div class="flex flex-col sm:flex-row justify-center md:justify-start space-y-4 sm:space-y-0 sm:space-x-4">
+  <button class="bg-black hover:bg-gray-900 text-white px-6 py-3 rounded-lg flex items-center justify-center transition">
+    <i class="fab fa-apple text-2xl mr-3"></i>
+    <div class="text-left">
+      <div class="text-xs">Download on the</div>
+      <div class="text-xl font-semibold">App Store</div>
+    </div>
+  </button>
+  <button class="bg-black hover:bg-gray-900 text-white px-6 py-3 rounded-lg flex items-center justify-center transition">
+    <i class="fab fa-google-play text-2xl mr-3"></i>
+    <div class="text-left">
+      <div class="text-xs">Get it on</div>
+      <div class="text-xl font-semibold">Google Play</div>
+    </div>
+  </button>
+</div>
+        
+        <div class="md:w-1/2 flex justify-center">
+          <div class="relative max-w-md">
+            <img src="https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" 
+                 alt="Pizza LazzA mobil uygulama ekran görüntüsü" 
+                 class="rounded-xl shadow-2xl w-full max-w-xs transform rotate-3">
+            <img src="https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" 
+                 alt="Pizza LazzA mobil uygulama ekran görüntüsü" 
+                 class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-xl shadow-2xl w-full max-w-xs transform -rotate-3 z-10">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="bg-gray-900 text-white pt-16 pb-8">
+    <div class="container mx-auto px-4">
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+        <div>
+          <h3 class="title-font text-xl font-bold mb-4">Pizza LazzA</h3>
+          <p class="text-gray-400">Türkiye'nin en otantik neapolitan pizza deneyimini sunuyoruz. İtalya'dan ödüllü şeflerimizle...</p>
+          <div class="flex space-x-4 mt-4">
+            <a href="#" class="text-gray-400 hover:text-white transition"><i class="fab fa-facebook-f"></i></a>
+            <a href="#" class="text-gray-400 hover:text-white transition"><i class="fab fa-instagram"></i></a>
+            <a href="#" class="text-gray-400 hover:text-white transition"><i class="fab fa-twitter"></i></a>
+          </div>
+        </div>
+        
+        <div>
+          <h4 class="font-bold text-lg mb-4">Hızlı Linkler</h4>
+          <ul class="space-y-2">
+            <li><a href="#" class="text-gray-400 hover:text-white transition">Ana Sayfa</a></li>
+            <li><a href="#" class="text-gray-400 hover:text-white transition">Menü</a></li>
+            <li><a href="#" class="text-gray-400 hover:text-white transition">Şubeler</a></li>
+            <li><a href="#" class="text-gray-400 hover:text-white transition">Kampanyalar</a></li>
+            <li><a href="#" class="text-gray-400 hover:text-white transition">Hakkımızda</a></li>
+          </ul>
+        </div>
+        
+        <div>
+          <h4 class="font-bold text-lg mb-4">İletişim</h4>
+          <ul class="space-y-2">
+            <li class="flex items-center text-gray-400"><i class="fas fa-phone-alt mr-2"></i> 0850 123 4567</li>
+            <li class="flex items-center text-gray-400"><i class="fas fa-envelope mr-2"></i> info@pizzalazza.com</li>
+            <li class="flex items-center text-gray-400"><i class="fas fa-map-marker-alt mr-2"></i> Genel Merkez: İstanbul</li>
+          </ul>
+        </div>
+        
+        <div>
+          <h4 class="font-bold text-lg mb-4">Bülten Aboneliği</h4>
+          <p class="text-gray-400 mb-4">Kampanya ve yeniliklerden haberdar olmak için kayıt olun</p>
+          <form class="flex">
+            <input type="email" placeholder="E-posta adresiniz" class="px-4 py-2 rounded-l-lg w-full text-gray-800">
+            <button type="submit" class="bg-red-600 hover:bg-red-700 px-4 py-2 rounded-r-lg transition">
+              <i class="fas fa-paper-plane"></i>
+            </button>
+          </form>
+        </div>
+      </div>
+      
+      <div class="border-t border-gray-800 pt-8 flex flex-col md:flex-row justify-between items-center">
+        <p class="text-gray-400 text-sm mb-4 md:mb-0">© 2023 Pizza LazzA. Tüm hakları saklıdır.</p>
+        <div class="flex space-x-6">
+          <a href="#" class="text-gray-400 hover:text-white text-sm transition">Gizlilik Politikası</a>
+          <a href="#" class="text-gray-400 hover:text-white text-sm transition">Çerez Politikası</a>
+          <a href="#" class="text-gray-400 hover:text-white text-sm transition">Kullanım Koşulları</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Simulate location detection
+    document.addEventListener('DOMContentLoaded', function() {
+      // In a real app, this would use geolocation API or IP lookup
+      const detectedCity = 'İstanbul';
+      const locationElements = document.querySelectorAll('#locationResults .location-card h3');
+      
+      // Highlight nearest location
+      locationElements.forEach(el => {
+        if (el.textContent.includes(detectedCity)) {
+          el.closest('.location-card').classList.add('ring-2', 'ring-red-500', 'ring-offset-2', 'ring-offset-white');
+        }
+      });
+      
+      // Add click handlers for location cards
+      document.querySelectorAll('.location-card').forEach(card => {
+        card.addEventListener('click', function() {
+          const location = this.querySelector('h3').textContent;
+          showNotification(`<i class="fas fa-check-circle mr-2"></i> ${location} şubesi seçildi!`);
+        });
+      });
+      
+      // Delivery button handler
+      document.getElementById('deliveryBtn').addEventListener('click', function() {
+        showNotification(`<i class="fas fa-motorcycle mr-2"></i> Paket servis siparişi oluşturuluyor...`);
+        setTimeout(() => {
+          window.open('https://www.yemeksepeti.com', '_blank');
+        }, 1500);
+      });
+
+      // Pickup button handler
+      document.getElementById('pickupBtn').addEventListener('click', function() {
+        showNotification(`<i class="fas fa-store mr-2"></i> Gel-Al siparişi oluşturuluyor...`);
+      });
+      
+      // Order buttons handler
+      document.querySelectorAll('.order-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+          const location = this.closest('.location-card').querySelector('h3').textContent;
+          showNotification(`<i class="fas fa-pizza-slice mr-2"></i> ${location} için sipariş oluşturuluyor...`);
+        });
+      });
+    });
+
+    function showNotification(message) {
+      const notification = document.createElement('div');
+      notification.className = 'fixed top-4 left-1/2 transform -translate-x-1/2 z-50 floating-notification';
+      notification.innerHTML = `
+        <div class="bg-white text-gray-800 px-6 py-3 rounded-lg shadow-lg flex items-center">
+          ${message}
+        </div>
+      `;
+      document.body.appendChild(notification);
+      setTimeout(() => {
+        notification.remove();
+      }, 3000);
+    }
+  </script>
+</body>
+</html>
