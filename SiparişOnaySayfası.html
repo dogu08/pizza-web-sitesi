@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cavit Gelos Pizza - Sipariş Onayı</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #d62828;
+            --primary-dark: #ba181b;
+            --success: #28a745;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --gray: #6c757d;
+            --light-gray: #e9ecef;
+            --border: #dee2e6;
+            --pizza-dough: #F8DEB5;
+            --pizza-sauce: #E74C3C;
+        }
+        
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background-color: #f5f5f5;
+            color: var(--dark);
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+        }
+        
+        .confirmation-container {
+            max-width: 800px;
+            margin: 50px auto;
+            background: #fff;
+            border-radius: 16px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            border: 1px solid var(--light-gray);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .confirmation-container::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 10px;
+            background: linear-gradient(90deg, var(--primary) 0%, var(--primary-dark) 100%);
+        }
+        
+        .confirmation-header {
+            text-align: center;
+            margin-bottom: 30px;
+            position: relative;
+        }
+        
+        .confirmation-icon {
+            font-size: 100px;
+            color: var(--success);
+            margin-bottom: 20px;
+            position: relative;
+            display: inline-block;
+        }
+        
+        .confirmation-icon::after {
+            content: "";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 120px;
+            height: 120px;
+            background: rgba(40, 167, 69, 0.1);
+            border-radius: 50%;
+        }
+        
+        .confirmation-title {
+            font-size: 32px;
+            color: var(--dark);
+            margin-bottom: 10px;
+            font-weight: 800;
+        }
+        
+        .confirmation-subtitle {
+            font-size: 18px;
+            color: var(--gray);
+            margin-bottom: 30px;
+        }
+        
+        .order-number {
+            display: inline-block;
+            background: var(--light);
+            padding: 8px 20px;
+            border-radius: 50px;
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 20px;
+            border: 1px dashed var(--primary);
+        }
+        
+        .order-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        
+        .order-details {
+            background: var(--light);
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+        
+        .section-title {
+            font-size: 20px;
+            margin-bottom: 20px;
+            font-weight: 700;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .detail-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px dashed var(--border);
+        }
+        
+        .detail-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        
+        .detail-label {
+            font-weight: 500;
+            color: var(--gray);
+        }
+        
+        .detail-value {
+            font-weight: 600;
+            color: var(--dark);
+            text-align: right;
+        }
+        
+        .total-price {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--primary);
+            margin-top: 25px;
+            text-align: center;
+            padding-top: 15px;
+            border-top: 2px solid var(--light-gray);
+        }
+        
+        .pizza-preview-container {
+            background: var(--light);
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            text-align: center;
+        }
+        
+        .pizza-preview-title {
+            font-size: 20px;
+            margin: 15px 0;
+            color: var(--dark);
+            font-weight: 600;
+        }
+        
+        .pizza-base {
+            width: 250px;
+            height: 250px;
+            background: var(--pizza-dough);
+            border-radius: 50%;
+            position: relative;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            margin: 0 auto;
+            overflow: hidden;
+        }
+        
+        .pizza-sauce {
+            position: absolute;
+            top: 10%;
+            left: 10%;
+            width: 80%;
+            height: 80%;
+            background: var(--pizza-sauce);
+            border-radius: 50%;
+            opacity: 0.7;
+        }
+        
+        .topping-visual {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            transition: all 0.5s;
+        }
+        
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 40px;
+        }
+        
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 14px 28px;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 16px;
+            text-align: center;
+            border: none;
+            gap: 8px;
+            min-width: 180px;
+        }
+        
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+            box-shadow: 0 4px 10px rgba(214, 40, 40, 0.3);
+        }
+        
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(214, 40, 40, 0.4);
+        }
+        
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--primary);
+            color: var(--primary);
+        }
+        
+        .btn-outline:hover {
+            background: rgba(214, 40, 40, 0.05);
+            transform: translateY(-2px);
+        }
+        
+        .thank-you {
+            text-align: center;
+            margin-top: 30px;
+            font-size: 18px;
+            color: var(--gray);
+            font-style: italic;
+        }
+        
+        @media (max-width: 768px) {
+            .confirmation-container {
+                margin: 20px;
+                padding: 30px 20px;
+            }
+            
+            .order-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .btn {
+                width: 100%;
+            }
+            
+            .confirmation-title {
+                font-size: 26px;
+            }
+            
+            .confirmation-subtitle {
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="confirmation-container">
+        <div class="confirmation-header">
+            <div class="confirmation-icon">
+                <i class="fas fa-check-circle"></i>
+            </div>
+            
+            <h1 class="confirmation-title">SİPARİŞİNİZ ALINDI!</h1>
+            <p class="confirmation-subtitle">Siparişiniz başarıyla oluşturuldu</p>
+            <div class="order-number" id="order-number">PZ-456789</div>
+        </div>
+        
+        <div class="order-content">
+            <div class="order-details">
+                <h3 class="section-title">
+                    <i class="fas fa-receipt"></i>
+                    Sipariş Detayları
+                </h3>
+                
+                <div class="detail-item">
+                    <span class="detail-label">Şube:</span>
+                    <span class="detail-value" id="branch-name">Kadıköy Şubesi</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Teslimat Türü:</span>
+                    <span class="detail-value" id="delivery-type">Gel Al</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Ödeme Yöntemi:</span>
+                    <span class="detail-value" id="payment-method">Nakit Ödeme</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Tahmini Hazırlanma Süresi:</span>
+                    <span class="detail-value" id="preparation-time">20-25 dakika</span>
+                </div>
+                
+                <div class="total-price" id="order-total">75₺</div>
+            </div>
+            
+            <div class="pizza-preview-container">
+                <h3 class="section-title">
+                    <i class="fas fa-pizza-slice"></i>
+                    Pizza Önizleme
+                </h3>
+                
+                <div class="pizza-base">
+                    <div class="pizza-sauce"></div>
+                    <!-- Malzemeler buraya JS ile eklenecek -->
+                </div>
+                <h4 class="pizza-preview-title">Siparişiniz</h4>
+            </div>
+        </div>
+        
+        <div class="action-buttons">
+            <button class="btn btn-outline" id="track-order-btn">
+                <i class="fas fa-map-marker-alt"></i> Siparişi Takip Et
+            </button>
+            <button class="btn btn-primary" id="new-order-btn">
+                <i class="fas fa-plus"></i> Yeni Sipariş
+            </button>
+        </div>
+        
+        <p class="thank-you">Cavit Gelos Pizza'yı tercih ettiğiniz için teşekkür ederiz!</p>
+    </div>
+
+    <script>
+        // URL'den sipariş ID'sini al
+        const urlParams = new URLSearchParams(window.location.search);
+        const orderId = urlParams.get('orderId') || 'PZ-' + Math.floor(Math.random() * 1000000);
+        
+        // Malzeme görselleri için mapping
+        const toppingIcons = {
+            "Mozarella": "fa-cheese",
+            "Domates": "fa-apple-alt",
+            "Sucuk": "fa-drumstick-bite",
+            "Mantar": "fa-leaf",
+            "Mısır": "fa-seedling"
+        };
+
+        // Sipariş detaylarını yükle
+        document.addEventListener('DOMContentLoaded', function() {
+            // Örnek sipariş verisi
+            const order = {
+                orderNumber: orderId,
+                branchName: "Kadıköy Şubesi",
+                deliveryType: "Gel Al",
+                paymentMethod: "Nakit Ödeme",
+                total: 75,
+                estimatedTime: "20-25 dakika",
+                dough: "Klasik Hamur",
+                sauce: "Domates Sos (Normal)",
+                toppings: ["Mozarella", "Domates", "Sucuk"],
+                extras: ["Mantar", "Mısır"]
+            };
+            
+            // Bilgileri doldur
+            document.getElementById('order-number').textContent = order.orderNumber;
+            document.getElementById('branch-name').textContent = order.branchName;
+            document.getElementById('delivery-type').textContent = order.deliveryType;
+            document.getElementById('payment-method').textContent = order.paymentMethod;
+            document.getElementById('preparation-time').textContent = order.estimatedTime;
+            document.getElementById('order-total').textContent = order.total + '₺';
+            
+            // Pizza görselini oluştur
+            updatePizzaVisual(order.toppings.concat(order.extras));
+            
+            // Buton eventleri
+            document.getElementById('track-order-btn').addEventListener('click', function() {
+                alert('Sipariş takip sayfasına yönlendiriliyorsunuz...');
+                // Gerçek uygulamada takip sayfasına yönlendir
+            });
+            
+            document.getElementById('new-order-btn').addEventListener('click', function() {
+                window.location.href = 'index.html'; // Ana sayfaya dön
+            });
+        });
+
+        // Pizza görselini güncelle
+        function updatePizzaVisual(toppings) {
+            const pizzaBase = document.querySelector('.pizza-base');
+            // Önceki malzemeleri temizle
+            document.querySelectorAll('.topping-visual').forEach(el => el.remove());
+            
+            // Her malzeme için görsel oluştur
+            toppings.forEach(toppingName => {
+                const visual = document.createElement('div');
+                visual.className = 'topping-visual';
+                
+                // Font Awesome ikonu kullan
+                const icon = document.createElement('i');
+                icon.className = `fas ${toppingIcons[toppingName] || 'fa-circle'}`;
+                icon.style.color = getToppingColor(toppingName);
+                visual.appendChild(icon);
+                
+                // Rastgele pozisyonlama
+                visual.style.top = `${Math.random() * 70 + 15}%`;
+                visual.style.left = `${Math.random() * 70 + 15}%`;
+                visual.style.transform = `rotate(${Math.random() * 360}deg) scale(${0.7 + Math.random() * 0.6})`;
+                
+                pizzaBase.appendChild(visual);
+            });
+        }
+
+        // Malzeme renklerini belirle
+        function getToppingColor(toppingName) {
+            const colors = {
+                "Mozarella": "#F8DE7E",
+                "Domates": "#FF6347",
+                "Sucuk": "#8B4513",
+                "Mantar": "#8F9779",
+                "Mısır": "#FFD700"
+            };
+            return colors[toppingName] || "#555";
+        }
+    </script>
+</body>
+</html>
